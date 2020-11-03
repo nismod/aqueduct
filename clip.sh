@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # Clip to bounding box
+adm3="GHA"
 
 xmin="-3.262509"
 ymin="4.737128"
 xmax="1.187968"
 ymax="11.162937"
 
-adm3="GHA"
 
 mkdir -p $adm3
 
