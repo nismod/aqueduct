@@ -2,6 +2,17 @@
 
 Scripts for working with the WRI Aqueduct global open flood dataset. [1]
 
+For country extracts, it can be helpful to use
+[Natural Earth boundaries](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/)
+
+For example, to check the boundary of Tanzania, download all country boundaries
+and check using the three-letter country code (TZA):
+
+    bash download_boundaries.sh
+    python check_bbox.py TZA
+
+For more accurate administrative boundaries at different levels, consider using
+the [GADM](https://gadm.org/index.html) dataset.
 
 ## Data dictionary
 
@@ -16,6 +27,9 @@ The file names are used to encode the model variables in a structured way:
     inuncoast_{climatescenario}_{subsidence}_{year}_{returnperiod}_{projection}.extension
     inuncoast_historical_nosub_hist_rp0002_0.pickle
 
+To produce metadata CSVs after downloading data, run
+
+    python generate_metadata_csvs.py
 
 ### Coastal flooding
 
