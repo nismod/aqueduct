@@ -2,3 +2,16 @@
 *.html
 *.xml
 *.gpkg
+*.zip
+*.shp
+*.shx
+*.prj
+*.dbf
+*.VERSION.txt
+*.cpg
+
+# Editor
+.vscode
+
+# Python
+.ipynb_checkpoints
