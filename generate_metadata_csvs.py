@@ -3,7 +3,16 @@ from glob import glob
 
 
 def main():
-    coastal = sorted(glob("inuncoast*.tif"))
+    coastal = []
+    river = []
+    with open('tiffs.txt') as fh:
+        for line in fh:
+            line = line.strip()
+            if "inuncoast" in line:
+                coastal.append(line)
+            else:
+                river.append(line)
+
     with open("aqueduct_coastal.csv", 'w') as fh:
         writer = csv.writer(fh)
         writer.writerow(
@@ -14,14 +23,13 @@ def main():
                 "year",
                 "return_period",
                 "sea_level_rise_percentile",
-                "filename",
                 "key",
+                "url",
             )
         )
         for fname in coastal:
             writer.writerow(parse_coastal_fname(fname))
 
-    river = sorted(glob("inunriver*.tif"))
     with open("aqueduct_river.csv", 'w') as fh:
         writer = csv.writer(fh)
         writer.writerow(
@@ -31,8 +39,8 @@ def main():
                 "model",
                 "year",
                 "return_period",
-                "filename",
                 "key",
+                "url",
             )
         )
         for fname in river:
@@ -54,6 +62,8 @@ def parse_coastal_fname(fname):
 
     _, climate, subsidence, year, rp, projection = to_split.split("_")
 
+    climate = parse_rcp(climate)
+
     if year == "hist":
         year = 1980
     else:
@@ -65,8 +75,8 @@ def parse_coastal_fname(fname):
     except ValueError:
         rp = float(rp_string)
     projection = int(projection)
-    key = f"hazard_coastal__climate_{climate}__sub_{subsidence}__y_{year}__rp_{rp}__perc_{projection}"
-    return "coastal", climate, subsidence, year, rp, projection, fname, key
+    key = f"hazard_coastal__rcp_{climate}__sub_{subsidence}__y_{year}__rp_{rp}__perc_{projection}"
+    return "coastal", climate, subsidence, year, rp, projection, key, fname
 
 
 def parse_river_fname(fname):
@@ -74,10 +84,14 @@ def parse_river_fname(fname):
     _, climate, model, year, rp = key.split("_")
     model = model.replace("0", "")
     rp = int(rp.replace("rp", ""))
+    climate = parse_rcp(climate)
 
-    key = f"hazard_river__climate_{climate}__model_{model}__y_{year}__rp_{rp}"
-    return "river", climate, model, year, rp, fname, key
+    key = f"hazard_river__rcp_{climate}__model_{model}__y_{year}__rp_{rp}"
+    return "river", climate, model, year, rp, key, fname
 
+
+def parse_rcp(rcp):
+    return rcp.replace("rcp","").replace("p5",".5")
 
 if __name__ == "__main__":
     main()
